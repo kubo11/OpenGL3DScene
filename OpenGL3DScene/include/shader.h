@@ -13,7 +13,7 @@ class Shader {
    const GLuint& GetID();
 
  private:
-   GLuint ID;
+   GLuint ID_;
    std::string LoadShaderFile(const std::string&);
    void CheckShaderCompileErrors(GLuint);
    void CheckProgramCompileErrors(GLuint);

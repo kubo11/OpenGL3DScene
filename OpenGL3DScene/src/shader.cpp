@@ -29,28 +29,28 @@ Shader::Shader(const std::string& shaderName) {
   glCompileShader(fragmentShader);
   CheckShaderCompileErrors(fragmentShader);
 
-  ID = glCreateProgram();
+  ID_ = glCreateProgram();
 
-  glAttachShader(ID, vertexShader);
-  glAttachShader(ID, fragmentShader);
+  glAttachShader(ID_, vertexShader);
+  glAttachShader(ID_, fragmentShader);
 
-  glLinkProgram(ID);
-  CheckProgramCompileErrors(ID);
+  glLinkProgram(ID_);
+  CheckProgramCompileErrors(ID_);
 
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
 }
 
 Shader::~Shader() {
-  glDeleteProgram(ID);
+  glDeleteProgram(ID_);
 }
 
 void Shader::Activate() {
-  glUseProgram(ID);
+  glUseProgram(ID_);
 }
 
 const GLuint& Shader::GetID() {
-  return ID;
+  return ID_;
 }
 
 // private
