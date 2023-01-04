@@ -141,8 +141,16 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\app.cpp" />
+    <ClCompile Include="src\camera.cpp" />
+    <ClCompile Include="src\ebo.cpp" />
+    <ClCompile Include="src\light_source.cpp" />
+    <ClCompile Include="src\model.cpp" />
     <ClCompile Include="src\scene.cpp" />
     <ClCompile Include="src\shader.cpp" />
+    <ClCompile Include="src\stb.cpp" />
+    <ClCompile Include="src\user_input.cpp" />
+    <ClCompile Include="src\vao.cpp" />
+    <ClCompile Include="src\vbo.cpp" />
     <ClCompile Include="src\window.cpp" />
     <ClCompile Include="third_party\glad\glad.c" />
   </ItemGroup>
@@ -152,9 +160,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\app.h" />
+    <ClInclude Include="include\camera.h" />
+    <ClInclude Include="include\ebo.h" />
     <ClInclude Include="include\error_log.h" />
+    <ClInclude Include="include\light_source.h" />
+    <ClInclude Include="include\model.h" />
     <ClInclude Include="include\scene.h" />
     <ClInclude Include="include\shader.h" />
+    <ClInclude Include="include\user_input.h" />
+    <ClInclude Include="include\vao.h" />
+    <ClInclude Include="include\vbo.h" />
     <ClInclude Include="include\window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

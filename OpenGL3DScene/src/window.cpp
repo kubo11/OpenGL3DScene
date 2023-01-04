@@ -1,8 +1,9 @@
 #include "window.h"
 
+#include "error_log.h"
+
 Window::Window(const std::string& title, int width, int height)
     : title_(title), width_(width), height_(height) {
-  glfwInit();
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -10,14 +11,10 @@ Window::Window(const std::string& title, int width, int height)
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   window_ = glfwCreateWindow(width_, height_, title_.c_str(), NULL, NULL);
-  if (window_ == nullptr) {
-    // TODO error
-  }
 }
 
 Window::~Window() {
   glfwDestroyWindow(window_);
-  glfwTerminate();
 }
 
 void Window::LoadAsCurrent() {
@@ -37,4 +34,8 @@ void Window::RunMainLoop() {
     glfwSwapBuffers(window_);
     glfwPollEvents();
   }
+}
+
+bool Window::IsGood() {
+  return window_ != nullptr;
 }

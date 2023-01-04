@@ -14,6 +14,7 @@ class Window {
    void LoadAsCurrent();
    void SetLoopFunc(std::function<void(void)>);
    void RunMainLoop();
+   bool IsGood();
 
  private:
    GLFWwindow* window_;
