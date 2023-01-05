@@ -149,6 +149,7 @@
     <ClCompile Include="src\shader.cpp" />
     <ClCompile Include="src\stb.cpp" />
     <ClCompile Include="src\texture.cpp" />
+    <ClCompile Include="src\timer.cpp" />
     <ClCompile Include="src\user_input.cpp" />
     <ClCompile Include="src\vao.cpp" />
     <ClCompile Include="src\vbo.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="include\scene.h" />
     <ClInclude Include="include\shader.h" />
     <ClInclude Include="include\texture.h" />
+    <ClInclude Include="include\timer.h" />
     <ClInclude Include="include\user_input.h" />
     <ClInclude Include="include\vao.h" />
     <ClInclude Include="include\vbo.h" />
