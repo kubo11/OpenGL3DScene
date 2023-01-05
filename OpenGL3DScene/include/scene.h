@@ -5,6 +5,7 @@
 
 #include "ebo.h"
 #include "shader.h"
+#include "texture.h"
 #include "vao.h"
 #include "vbo.h"
 
@@ -21,6 +22,7 @@ public:
   std::unique_ptr<VAO> vao_;
   std::unique_ptr<VBO> vbo_;
   std::unique_ptr<Shader> shader_;
+  std::unique_ptr<Texture> texture_;
 };
 
 #endif  // OPENGL3DSCENE_SCENE_H_
