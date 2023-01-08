@@ -6,6 +6,8 @@
 #include <GLFW/glfw3.h>
 #include <string>
 
+
+
 class Window {
  public:
    Window(const std::string&, int, int);
@@ -15,6 +17,13 @@ class Window {
    void SetLoopFunc(std::function<void(void)>);
    void RunMainLoop();
    bool IsGood();
+   const int GetWidth() const;
+   const int GetHeight() const;
+   void SetCursorMode(GLenum);
+   void GetCursorPos(double*, double*);
+   void SetCursorPos(double, double);
+   GLenum GetKey(GLenum);
+   GLenum GetMouseButton(GLenum);
 
  private:
    GLFWwindow* window_;

@@ -39,3 +39,31 @@ void Window::RunMainLoop() {
 bool Window::IsGood() {
   return window_ != nullptr;
 }
+
+const int Window::GetWidth() const {
+  return width_;
+}
+
+const int Window::GetHeight() const {
+  return height_;
+}
+
+void Window::SetCursorMode(GLenum mode) {
+  glfwSetInputMode(window_, GLFW_CURSOR, mode);
+}
+
+void Window::GetCursorPos(double* posX, double* posY) {
+  glfwGetCursorPos(window_, posX, posY);
+}
+
+void Window::SetCursorPos(double posX, double posY) {
+  glfwSetCursorPos(window_, posX, posY);
+}
+
+GLenum Window::GetKey(GLenum key) {
+  return glfwGetKey(window_, key);
+}
+
+GLenum Window::GetMouseButton(GLenum mouse_button) {
+  return glfwGetMouseButton(window_, mouse_button);
+}

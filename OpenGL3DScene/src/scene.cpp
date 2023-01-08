@@ -5,7 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 Scene::Scene() {
-  camera_ = std::make_unique<Camera>(1.0f, 45.0f, 0.1f, 100.0f, glm::vec3(0.0f, 0.5f, 2.0f));
+  camera_ = std::make_shared<Camera>(1.0f, 45.0f, 0.1f, 100.0f, glm::vec3(0.0f, 0.5f, 2.0f), false);
   timer_ = std::make_unique<Timer>(0.01f, [&]() { modelRotation_ += 0.5f; });
 }
 
@@ -52,22 +52,18 @@ void Scene::Render() {
   timer_->Tick();
 
   glm::mat4 model = glm::mat4(1.0f);
-  //glm::mat4 view = glm::mat4(1.0f);
-  //glm::mat4 proj = glm::mat4(1.0f);
   model = glm::rotate(model, glm::radians(modelRotation_), glm::vec3(0.0f, 1.0f, 0.0f));
-  //view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
-  //proj = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
 
   int modelLoc = glGetUniformLocation(shader_->GetID(), "model");
   glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
   camera_->UpdateMatrices(shader_->GetID(), "camMatrix");
-  //int viewLoc = glGetUniformLocation(shader_->GetID(), "view");
-  //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-  //int projLoc = glGetUniformLocation(shader_->GetID(), "proj");
-  //glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
 
   texture_->Bind();
   vao_->Bind();
   glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
+}
+
+std::shared_ptr<Camera> Scene::GetCurrentCamera() {
+  return camera_;
 }

@@ -18,9 +18,10 @@ public:
   
   void LoadData();
   void Render();
+  std::shared_ptr<Camera> GetCurrentCamera();
 
  private:
-  std::unique_ptr<Camera> camera_;
+  std::shared_ptr<Camera> camera_;
   std::unique_ptr<EBO> ebo_;
   std::unique_ptr<VAO> vao_;
   std::unique_ptr<VBO> vbo_;
