@@ -6,6 +6,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "shader.h"
+
 class Camera {
 public:
   glm::vec3 Position;
@@ -14,10 +16,15 @@ public:
   float Speed = 0.001f;
 
   Camera(GLfloat, GLfloat, GLfloat, GLfloat, glm::vec3, bool=true);
-  Camera(Camera&) = delete;
   ~Camera() = default;
 
-  void UpdateMatrices(GLuint, const char*);
+  Camera(const Camera&) = delete;
+  Camera& operator = (const Camera&) = delete;
+
+  Camera(Camera&&) noexcept = default;
+  Camera& operator = (Camera&&) noexcept = default;
+
+  void UpdateMatrices(Shader&);
   void Move(glm::vec3);
   void Rotate(float, float);
   void Lock();

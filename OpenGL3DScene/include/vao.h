@@ -9,8 +9,14 @@
 class VAO {
 public:
   VAO();
-  VAO(VAO&) = delete;
   ~VAO();
+
+  VAO(const VAO&) = delete;
+  VAO& operator = (const VAO&) = delete;
+
+  VAO(VAO&&) noexcept = default;
+  VAO& operator = (VAO&&) noexcept = default;
+
   void Bind();
   void Unbind();
   void LinkAttrib(VBO&, GLuint, GLuint, GLenum, GLsizeiptr, void*);

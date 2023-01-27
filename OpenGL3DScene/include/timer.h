@@ -6,8 +6,13 @@
 class Timer {
  public:
   Timer(double, std::function<void(void)>);
-  Timer(Timer&) = delete;
   ~Timer() = default;
+
+  Timer(const Timer&) = delete;
+  Timer& operator = (const Timer&) = delete;
+
+  Timer(Timer&&) noexcept = default;
+  Timer& operator = (Timer&&) noexcept = default;
 
   void Tick();
 private:

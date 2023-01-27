@@ -12,14 +12,14 @@ Camera::Camera(GLfloat aspect_ratio, GLfloat fov, GLfloat near_plane, GLfloat fa
   is_static_ = is_static;
 }
 
-void Camera::UpdateMatrices(GLuint shader_id, const char* uniform) {
+void Camera::UpdateMatrices(Shader& shader) {
 	glm::mat4 view = glm::mat4(1.0f);
 	glm::mat4 proj = glm::mat4(1.0f);
 
 	view = glm::lookAt(Position, Position + Orientation, Up);
 	proj = glm::perspective(glm::radians(fov_), aspect_ratio_, near_plane_, far_plane_);
 
-	glUniformMatrix4fv(glGetUniformLocation(shader_id, uniform), 1, GL_FALSE, glm::value_ptr(proj * view));
+  shader.SetMat4("camMatrix", 1, false, proj * view);
 }
 
 void Camera::Move(glm::vec3 moveVec) {

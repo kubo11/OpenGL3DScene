@@ -159,6 +159,12 @@
   <ItemGroup>
     <None Include="..\Shaders\default.frag" />
     <None Include="..\Shaders\default.vert" />
+    <None Include="..\Shaders\gouraud_light.frag" />
+    <None Include="..\Shaders\gouraud_light.vert" />
+    <None Include="..\Shaders\light.frag" />
+    <None Include="..\Shaders\light.vert" />
+    <None Include="..\Shaders\phong_light.frag" />
+    <None Include="..\Shaders\phong_light.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\app.h" />

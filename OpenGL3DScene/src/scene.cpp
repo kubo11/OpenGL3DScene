@@ -1,69 +1,140 @@
 #include "scene.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <vector>
 
 Scene::Scene() {
-  camera_ = std::make_shared<Camera>(1.0f, 45.0f, 0.1f, 100.0f, glm::vec3(0.0f, 0.5f, 2.0f), false);
-  timer_ = std::make_unique<Timer>(0.01f, [&]() { modelRotation_ += 0.5f; });
-}
+  std::vector<GLfloat> vertices = {
+  -0.5f,  0.0f,  0.5f,  -0.5f, 0.8f, 0.0f,   0.0f, 0.0f,
+  -0.5f,  0.0f, -0.5f,  -0.5f, 0.8f, 0.0f,   5.0f, 0.0f,
+   0.5f,  0.0f, -0.5f,  -0.5f, 0.8f, 0.0f,   0.0f, 0.0f,
+   0.5f,  0.0f,  0.5f,  -0.5f, 0.8f, 0.0f,   5.0f, 0.0f,
+   0.0f,  0.8f,  0.0f,  -0.5f, 0.8f, 0.0f,   2.5f, 5.0f,
 
-void Scene::LoadData() {
-  GLfloat vertices[] = {
-    -0.5f,  0.0f,  0.5f,   1.0f, 0.0f, 0.0f,   0.0f, 0.0f,
-    -0.5f,  0.0f, -0.5f,   0.0f, 1.0f, 0.0f,   5.0f, 0.0f,
-     0.5f,  0.0f, -0.5f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
-     0.5f,  0.0f,  0.5f,   1.0f, 1.0f, 1.0f,   5.0f, 0.0f,
-     0.0f,  0.8f,  0.0f,   1.0f, 1.0f, 1.0f,   2.5f, 5.0f,
+  -0.5f,  0.0f,  0.5f,   0.0f, 0.8f,-0.5f,   0.0f, 0.0f,
+  -0.5f,  0.0f, -0.5f,   0.0f, 0.8f,-0.5f,   5.0f, 0.0f,
+   0.5f,  0.0f, -0.5f,   0.0f, 0.8f,-0.5f,   0.0f, 0.0f,
+   0.5f,  0.0f,  0.5f,   0.0f, 0.8f,-0.5f,   5.0f, 0.0f,
+   0.0f,  0.8f,  0.0f,   0.0f, 0.8f,-0.5f,   2.5f, 5.0f,
+
+  -0.5f,  0.0f,  0.5f,   0.5f, 0.8f, 0.0f,   0.0f, 0.0f,
+  -0.5f,  0.0f, -0.5f,   0.5f, 0.8f, 0.0f,   5.0f, 0.0f,
+   0.5f,  0.0f, -0.5f,   0.5f, 0.8f, 0.0f,   0.0f, 0.0f,
+   0.5f,  0.0f,  0.5f,   0.5f, 0.8f, 0.0f,   5.0f, 0.0f,
+   0.0f,  0.8f,  0.0f,   0.5f, 0.8f, 0.0f,   2.5f, 5.0f,
+
+  -0.5f,  0.0f,  0.5f,   0.0f, 0.8f, 0.5f,   0.0f, 0.0f,
+  -0.5f,  0.0f, -0.5f,   0.0f, 0.8f, 0.5f,   5.0f, 0.0f,
+   0.5f,  0.0f, -0.5f,   0.0f, 0.8f, 0.5f,   0.0f, 0.0f,
+   0.5f,  0.0f,  0.5f,   0.0f, 0.8f, 0.5f,   5.0f, 0.0f,
+   0.0f,  0.8f,  0.0f,   0.0f, 0.8f, 0.5f,   2.5f, 5.0f,
+
+  -0.5f,  0.0f,  0.5f,   0.0f,-1.0f, 0.0f,   0.0f, 0.0f,
+  -0.5f,  0.0f, -0.5f,   0.0f,-1.0f, 0.0f,   5.0f, 0.0f,
+   0.5f,  0.0f, -0.5f,   0.0f,-1.0f, 0.0f,   0.0f, 0.0f,
+   0.5f,  0.0f,  0.5f,   0.0f,-1.0f, 0.0f,   5.0f, 0.0f,
+   0.0f,  0.8f,  0.0f,   0.0f,-1.0f, 0.0f,   2.5f, 5.0f,
   };
-  GLuint indices[] = {
+  std::vector<GLuint> indices = {
+    20, 21, 22,
+    20, 22, 23,
+    0, 1, 4,
+    6, 7, 9,
+    12, 13, 14,
+    18, 15, 19
+  };
+  std::vector<GLfloat> lightVertices = {
+  -0.5f,  0.5f,  0.5f,
+  -0.5f,  0.5f, -0.5f,
+   0.5f,  0.5f, -0.5f,
+   0.5f,  0.5f,  0.5f,
+  -0.5f, -0.5f,  0.5f,
+  -0.5f, -0.5f, -0.5f,
+   0.5f, -0.5f, -0.5f,
+   0.5f, -0.5f,  0.5f,
+  };
+  std::vector<GLuint> lightIndices = {
     0, 1, 2,
     0, 2, 3,
-    0, 1, 4,
-    1, 2, 4,
-    2, 3, 4,
+    4, 5, 6,
+    4, 6, 7,
+    0, 4, 5,
+    0, 1, 5,
+    1, 5, 6,
+    1, 2, 6,
+    2, 6, 7,
+    2, 3, 7,
+    3, 7, 4,
     3, 0, 4
   };
-  shader_ = std::make_unique<Shader>("default");
-  vao_ = std::make_unique<VAO>();
-  vao_->Bind();
-  vbo_ = std::make_unique<VBO>(1);
-  vbo_->BufferData(0, vertices, sizeof(vertices));
-  ebo_ = std::make_unique<EBO>(1);
-  ebo_->BufferData(0, indices, sizeof(indices));
-  vao_->LinkAttrib(*vbo_.get(), 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
-  vao_->LinkAttrib(*vbo_.get(), 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-  vao_->LinkAttrib(*vbo_.get(), 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-  texture_ = std::make_unique<Texture>("wall.jpg", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-  
-  vao_->Unbind();
-  vbo_->Unbind();
-  ebo_->Unbind();
-
+  std::vector<GLfloat> floorVertives = {
+    -1.0f, -0.1f,  1.0f,		0.0f, 1.0f, 0.0f,		0.0f, 0.0f,
+    -1.0f, -0.1f, -1.0f,		0.0f, 1.0f, 0.0f,		0.0f, 1.0f,
+     1.0f, -0.1f, -1.0f,		0.0f, 1.0f, 0.0f,		1.0f, 1.0f,
+     1.0f, -0.1f,  1.0f,		0.0f, 1.0f, 0.0f,		1.0f, 0.0f,
+  };
+  std::vector<GLuint> floorIndices =
+  {
+    0, 1, 2,
+    0, 2, 3
+  };
+  cameras_.emplace_back(1.0f, 45.0f, 0.1f, 100.0f, glm::vec3(0.0f, 0.5f, 2.0f), false);
+  current_camera = &cameras_.front();
+  models_.emplace_back(std::move(vertices), std::move(indices), "wall.jpg");
+  models_.emplace_back(std::move(floorVertives), std::move(floorIndices), "planks.png");
+  models_[1].Scale(glm::vec3(4.0f, 4.0f, 4.0f));
+  timer_ = std::make_unique<Timer>(0.01, [&]() { models_.front().Rotate(glm::radians(0.5f), glm::vec3(0.0f, 1.0f, 0.0f)); });
+  shaders_.emplace_back("default");
+  current_shader = &shaders_.front();
+  light_source_shader_ = std::make_unique<Shader>("light");
+  point_lights_.emplace_back(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.2f, 1.0f, 2.0f), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f));
+  point_lights_.front().SetModel(std::make_unique<SimpleLightModel>(lightVertices, lightIndices));
+  spot_lights_.emplace_back(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(-2.0f, 1.0f, -2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -0.5f, 1.0f), glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
+  spot_lights_.front().SetModel(std::make_unique<SimpleLightModel>(lightVertices, lightIndices));
   glEnable(GL_DEPTH_TEST);
+}
+
+Scene::~Scene() {
+
 }
 
 void Scene::Render() {
   glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  shader_->Activate();
 
   timer_->Tick();
 
-  glm::mat4 model = glm::mat4(1.0f);
-  model = glm::rotate(model, glm::radians(modelRotation_), glm::vec3(0.0f, 1.0f, 0.0f));
+  current_shader->Activate();
 
-  int modelLoc = glGetUniformLocation(shader_->GetID(), "model");
-  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+  current_camera->UpdateMatrices(*current_shader);
+  current_shader->SetVec3("viewPos", current_camera->Position);
 
-  camera_->UpdateMatrices(shader_->GetID(), "camMatrix");
+  for (int i = 0; i < directional_lights_.size(); ++i) {
+    directional_lights_[i].Render(*current_shader, i);
+  }
+  current_shader->SetInt("directionalLightsCount", directional_lights_.size());
+  for (int i = 0; i < point_lights_.size(); ++i) {
+    point_lights_[i].Render(*current_shader, i);
+  }
+  current_shader->SetInt("pointLightsCount", point_lights_.size());
+  for (int i = 0; i < spot_lights_.size(); ++i) {
+    spot_lights_[i].Render(*current_shader, i);
+  }
+  current_shader->SetInt("spotLightsCount", spot_lights_.size());
 
-  texture_->Bind();
-  vao_->Bind();
-  glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
-}
+  for (auto& model : models_) {
+    model.Render(*current_shader);
+  }
 
-std::shared_ptr<Camera> Scene::GetCurrentCamera() {
-  return camera_;
+  light_source_shader_->Activate();
+  current_camera->UpdateMatrices(*light_source_shader_.get());
+
+  for (int i = 0; i < directional_lights_.size(); ++i) {
+    directional_lights_[i].RenderModel(*light_source_shader_.get());
+  }
+  for (int i = 0; i < point_lights_.size(); ++i) {
+    point_lights_[i].RenderModel(*light_source_shader_.get());
+  }
+  for (int i = 0; i < spot_lights_.size(); ++i) {
+    spot_lights_[i].RenderModel(*light_source_shader_.get());
+  }
 }

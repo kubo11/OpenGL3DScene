@@ -8,8 +8,14 @@
 class EBO {
 public:
   EBO(int);
-  EBO(EBO&) = delete;
   ~EBO();
+
+  EBO(const EBO&) = delete;
+  EBO& operator = (const EBO&) = delete;
+
+  EBO(EBO&&) noexcept = default;
+  EBO& operator = (EBO&&) noexcept = default;
+
   void Bind(int);
   void Unbind();
   const std::vector<GLuint> GetIDs();

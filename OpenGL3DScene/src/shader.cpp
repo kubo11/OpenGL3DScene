@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
 #include "error_log.h"
@@ -49,8 +50,28 @@ void Shader::Activate() {
   glUseProgram(ID_);
 }
 
-const GLuint& Shader::GetID() {
+const GLuint& Shader::GetID() const {
   return ID_;
+}
+
+void Shader::SetInt(const std::string& name, int value) {
+  int id = glGetUniformLocation(ID_, name.c_str());
+  glUniform1i(id, value);
+}
+
+void Shader::SetFloat(const std::string& name, float value) {
+  int id = glGetUniformLocation(ID_, name.c_str());
+  glUniform1f(id, value);
+}
+
+void Shader::SetVec3(const std::string& name, glm::vec3 value) {
+  int id = glGetUniformLocation(ID_, name.c_str());
+  glUniform3f(id, value.x, value.y, value.z);
+}
+
+void Shader::SetMat4(const std::string& name, int count, bool transpose, glm::mat4 value) {
+  int id = glGetUniformLocation(ID_, name.c_str());
+  glUniformMatrix4fv(id, count, transpose, glm::value_ptr(value));
 }
 
 // private

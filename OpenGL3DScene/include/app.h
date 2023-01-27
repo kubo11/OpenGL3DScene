@@ -8,8 +8,13 @@
 class App {
  public:
   App();
-  App(App&) = delete;
   ~App();
+
+  App(const App&) = delete;
+  App& operator = (const App&) = delete;
+
+  App(App&&) noexcept = default;
+  App& operator = (App&&) noexcept = default;
 
   void Run();
 

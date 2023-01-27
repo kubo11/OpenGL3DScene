@@ -8,8 +8,14 @@
 class VBO {
  public:
   VBO(int);
-  VBO(VBO&) = delete;
   ~VBO();
+
+  VBO(const VBO&) = delete;
+  VBO& operator = (const VBO&) = delete;
+
+  VBO(VBO&&) noexcept = default;
+  VBO& operator = (VBO&&) noexcept = default;
+
   void Bind(int);
   void Unbind();
   const std::vector<GLuint> GetIDs();

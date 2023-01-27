@@ -7,8 +7,13 @@
 class Texture {
  public:
   Texture(const char*, GLenum, GLenum, GLenum, GLenum);
-  Texture(Texture&) = delete;
   ~Texture();
+
+  Texture(const Texture&) = delete;
+  Texture& operator = (const Texture&) = delete;
+
+  Texture(Texture&&) noexcept = default;
+  Texture& operator = (Texture&&) noexcept = default;
 
   void Bind();
   void Unbind();

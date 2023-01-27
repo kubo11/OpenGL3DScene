@@ -11,8 +11,14 @@
 class Window {
  public:
    Window(const std::string&, int, int);
-   Window(Window&) = delete;
    ~Window();
+
+   Window(const Window&) = delete;
+   Window& operator = (const Window&) = delete;
+
+   Window(Window&&) noexcept = default;
+   Window& operator = (Window&&) noexcept = default;
+
    void LoadAsCurrent();
    void SetLoopFunc(std::function<void(void)>);
    void RunMainLoop();

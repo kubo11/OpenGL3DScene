@@ -4,31 +4,35 @@
 #include <memory>
 
 #include "camera.h"
-#include "ebo.h"
+#include "light_source.h"
+#include "model.h"
 #include "shader.h"
-#include "texture.h"
 #include "timer.h"
-#include "vao.h"
-#include "vbo.h"
 
 class Scene {
 public:
   Scene();
-  Scene(Scene&) = delete;
+  ~Scene();
+
+  Scene(const Scene&) = delete;
+  Scene& operator = (const Scene&) = delete;
+
+  Scene(Scene&&) noexcept = default;
+  Scene& operator = (Scene&&) noexcept = default;
   
-  void LoadData();
   void Render();
-  std::shared_ptr<Camera> GetCurrentCamera();
+  Camera* current_camera;
+  Shader* current_shader;
 
  private:
-  std::shared_ptr<Camera> camera_;
-  std::unique_ptr<EBO> ebo_;
-  std::unique_ptr<VAO> vao_;
-  std::unique_ptr<VBO> vbo_;
-  std::unique_ptr<Shader> shader_;
-  std::unique_ptr<Texture> texture_;
+  std::vector<Camera> cameras_;
+  std::vector<Shader> shaders_;
+  std::unique_ptr<Shader> light_source_shader_;
   std::unique_ptr<Timer> timer_;
-  float modelRotation_ = 0.0f;
+  std::vector<Model> models_;
+  std::vector<PointLight> point_lights_;
+  std::vector<DirectionalLight> directional_lights_;
+  std::vector<SpotLight> spot_lights_;
 };
 
 #endif  // OPENGL3DSCENE_SCENE_H_

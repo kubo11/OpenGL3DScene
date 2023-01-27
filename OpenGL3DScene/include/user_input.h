@@ -14,8 +14,13 @@ using ScopeMap = std::unordered_map<std::string, BindingMap>;
 class UserInput {
  public:
   UserInput() = default;
-  UserInput(UserInput&) = delete;
   ~UserInput() = default;
+
+  UserInput(const UserInput&) = delete;
+  UserInput& operator = (const UserInput&) = delete;
+
+  UserInput(UserInput&&) noexcept = default;
+  UserInput& operator = (UserInput&&) noexcept = default;
 
   void AddScope(const std::string&);
   void RemoveScope(const std::string&);
@@ -36,8 +41,13 @@ class UserInput {
 class KeyboardInput : public UserInput {
  public:
   KeyboardInput() = default;
-  KeyboardInput(KeyboardInput&) = delete;
   ~KeyboardInput() = default;
+
+  KeyboardInput(const KeyboardInput&) = delete;
+  KeyboardInput& operator = (const KeyboardInput&) = delete;
+
+  KeyboardInput(KeyboardInput&&) noexcept = default;
+  KeyboardInput& operator = (KeyboardInput&&) noexcept = default;
 
   void CaptureUserInput(std::shared_ptr<Window>) override;
 };
@@ -45,8 +55,13 @@ class KeyboardInput : public UserInput {
 class MouseInput : public UserInput {
  public:
   MouseInput() = default;
-  MouseInput(MouseInput&) = delete;
   ~MouseInput() = default;
+
+  MouseInput(const MouseInput&) = delete;
+  MouseInput& operator = (const MouseInput&) = delete;
+
+  MouseInput(MouseInput&&) noexcept = default;
+  MouseInput& operator = (MouseInput&&) noexcept = default;
 
   bool first_click = true;
   float sensitivity = 50.0f;
