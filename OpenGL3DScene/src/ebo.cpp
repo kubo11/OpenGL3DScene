@@ -1,28 +1,28 @@
 #include "ebo.h"
 
-EBO::EBO(int num) {
-  IDs_ = std::vector<GLuint>(num);
-  glGenBuffers(num, IDs_.data());
+#include "error_log.h"
+
+EBO::EBO() {
+  GL_CHECK(glGenBuffers(1, &ID_));
 }
 
 EBO::~EBO() {
-  glDeleteBuffers(IDs_.size(), IDs_.data());
+  GL_CHECK(glDeleteBuffers(1, &ID_));
 }
 
-void EBO::Bind(int id) {
-  if (id > IDs_.size()) return;
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IDs_[id]);
+void EBO::Bind() {
+  GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID_));
 }
 
 void EBO::Unbind() {
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 }
 
-const std::vector<GLuint> EBO::GetIDs() {
-  return IDs_;
+const GLuint EBO::GetID() {
+  return ID_;
 }
 
-void EBO::BufferData(int id, GLuint indices[], int size) {
-  Bind(id);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
+void EBO::BufferData(void* indices, size_t size) {
+  //Bind();
+  GL_CHECK(glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW));
 }

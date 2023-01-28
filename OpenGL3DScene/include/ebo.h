@@ -7,7 +7,7 @@
 
 class EBO {
 public:
-  EBO(int);
+  EBO();
   ~EBO();
 
   EBO(const EBO&) = delete;
@@ -16,13 +16,13 @@ public:
   EBO(EBO&&) noexcept = default;
   EBO& operator = (EBO&&) noexcept = default;
 
-  void Bind(int);
+  void Bind();
   void Unbind();
-  const std::vector<GLuint> GetIDs();
-  void BufferData(int, GLuint[], int);
+  const GLuint GetID();
+  void BufferData(void*, size_t);
 
 private:
-  std::vector<GLuint> IDs_;
+  GLuint ID_;
 };
 
 #endif  // OPENGL3DSCENE_EBO_H_

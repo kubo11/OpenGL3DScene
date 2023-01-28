@@ -7,7 +7,7 @@
 
 class VBO {
  public:
-  VBO(int);
+  VBO();
   ~VBO();
 
   VBO(const VBO&) = delete;
@@ -16,13 +16,13 @@ class VBO {
   VBO(VBO&&) noexcept = default;
   VBO& operator = (VBO&&) noexcept = default;
 
-  void Bind(int);
+  void Bind();
   void Unbind();
-  const std::vector<GLuint> GetIDs();
-  void BufferData(int, GLfloat[], int);
+  const GLuint GetID();
+  void BufferData(void*, size_t);
 
  private:
-   std::vector<GLuint> IDs_;
+   GLuint ID_;
 };
 
 #endif  // OPENGL3DSCENE_VBO_H_

@@ -2,41 +2,74 @@
 
 #include <stb/stb_image.h>
 
-Texture::Texture(const char* filename, GLenum type, GLenum slot, GLenum format, GLenum pixelType) {
-  type_ = type;
+#include "error_log.h"
 
+Texture::Texture(fs::path path, TextureType texture_type) : type_(texture_type), path_(path) {
   int width, height, colorChannels;
 
   stbi_set_flip_vertically_on_load(true);
 
-  unsigned char* bytes = stbi_load(filename, &width, &height, &colorChannels, 4);
+  unsigned char* bytes = stbi_load(path_.string().c_str(), &width, &height, &colorChannels, 0);
+  if (!bytes) {
+    ERROR << "Could not load texture at: " << path_.string() << std::endl;
+    return;
+  }
 
-  glGenTextures(1, &ID_);
-  glActiveTexture(slot);
-  glBindTexture(type_, ID_);
+  GLenum format;
+  switch (colorChannels) {
+  case 1:
+    format = GL_RED;
+    break;
+  case 3:
+    format = GL_RGB;
+    break;
+  case 4:
+    format = GL_RGBA;
+    break;
+  default:
+    ERROR << "Unsupported pixel format detected in texture at: " << path_.string() << std::endl;
+    return;
+  }
 
-  glTexParameteri(type_, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-  glTexParameteri(type_, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  GL_CHECK(glGenTextures(1, &ID_));
+  GL_CHECK(glBindTexture(GL_TEXTURE_2D, ID_));
 
-  glTexParameteri(type_, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(type_, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR));
+  GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+  GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+  GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
 
-  glTexImage2D(type_, 0, GL_RGBA, width, height, 0, format, pixelType, bytes);
-
-  glGenerateMipmap(type_);
+  GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, bytes));
+  glGenerateMipmap(GL_TEXTURE_2D);
 
   stbi_image_free(bytes);
-  Unbind();
+  GL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
 }
 
 Texture::~Texture() {
-  glDeleteTextures(1, &ID_);
+  GL_CHECK(glDeleteTextures(1, &ID_));
 }
 
 void Texture::Bind() {
-  glBindTexture(type_, ID_);
+  GL_CHECK(glBindTexture(GL_TEXTURE_2D, ID_));
 }
 
 void Texture::Unbind() {
-  glBindTexture(type_, 0);
+  GL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
+}
+
+const TextureType& Texture::GetType() const {
+  return type_;
+}
+
+void Texture::Activate(unsigned int number) {
+  GL_CHECK(glActiveTexture(GL_TEXTURE0 + number));
+}
+
+void Texture::Deactivate() {
+  GL_CHECK(glActiveTexture(GL_TEXTURE0));
+}
+
+const fs::path Texture::GetPath() const {
+  return path_;
 }

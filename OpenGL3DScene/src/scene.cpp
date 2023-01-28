@@ -3,45 +3,6 @@
 #include <vector>
 
 Scene::Scene() {
-  std::vector<GLfloat> vertices = {
-  -0.5f,  0.0f,  0.5f,  -0.5f, 0.8f, 0.0f,   0.0f, 0.0f,
-  -0.5f,  0.0f, -0.5f,  -0.5f, 0.8f, 0.0f,   5.0f, 0.0f,
-   0.5f,  0.0f, -0.5f,  -0.5f, 0.8f, 0.0f,   0.0f, 0.0f,
-   0.5f,  0.0f,  0.5f,  -0.5f, 0.8f, 0.0f,   5.0f, 0.0f,
-   0.0f,  0.8f,  0.0f,  -0.5f, 0.8f, 0.0f,   2.5f, 5.0f,
-
-  -0.5f,  0.0f,  0.5f,   0.0f, 0.8f,-0.5f,   0.0f, 0.0f,
-  -0.5f,  0.0f, -0.5f,   0.0f, 0.8f,-0.5f,   5.0f, 0.0f,
-   0.5f,  0.0f, -0.5f,   0.0f, 0.8f,-0.5f,   0.0f, 0.0f,
-   0.5f,  0.0f,  0.5f,   0.0f, 0.8f,-0.5f,   5.0f, 0.0f,
-   0.0f,  0.8f,  0.0f,   0.0f, 0.8f,-0.5f,   2.5f, 5.0f,
-
-  -0.5f,  0.0f,  0.5f,   0.5f, 0.8f, 0.0f,   0.0f, 0.0f,
-  -0.5f,  0.0f, -0.5f,   0.5f, 0.8f, 0.0f,   5.0f, 0.0f,
-   0.5f,  0.0f, -0.5f,   0.5f, 0.8f, 0.0f,   0.0f, 0.0f,
-   0.5f,  0.0f,  0.5f,   0.5f, 0.8f, 0.0f,   5.0f, 0.0f,
-   0.0f,  0.8f,  0.0f,   0.5f, 0.8f, 0.0f,   2.5f, 5.0f,
-
-  -0.5f,  0.0f,  0.5f,   0.0f, 0.8f, 0.5f,   0.0f, 0.0f,
-  -0.5f,  0.0f, -0.5f,   0.0f, 0.8f, 0.5f,   5.0f, 0.0f,
-   0.5f,  0.0f, -0.5f,   0.0f, 0.8f, 0.5f,   0.0f, 0.0f,
-   0.5f,  0.0f,  0.5f,   0.0f, 0.8f, 0.5f,   5.0f, 0.0f,
-   0.0f,  0.8f,  0.0f,   0.0f, 0.8f, 0.5f,   2.5f, 5.0f,
-
-  -0.5f,  0.0f,  0.5f,   0.0f,-1.0f, 0.0f,   0.0f, 0.0f,
-  -0.5f,  0.0f, -0.5f,   0.0f,-1.0f, 0.0f,   5.0f, 0.0f,
-   0.5f,  0.0f, -0.5f,   0.0f,-1.0f, 0.0f,   0.0f, 0.0f,
-   0.5f,  0.0f,  0.5f,   0.0f,-1.0f, 0.0f,   5.0f, 0.0f,
-   0.0f,  0.8f,  0.0f,   0.0f,-1.0f, 0.0f,   2.5f, 5.0f,
-  };
-  std::vector<GLuint> indices = {
-    20, 21, 22,
-    20, 22, 23,
-    0, 1, 4,
-    6, 7, 9,
-    12, 13, 14,
-    18, 15, 19
-  };
   std::vector<GLfloat> lightVertices = {
   -0.5f,  0.5f,  0.5f,
   -0.5f,  0.5f, -0.5f,
@@ -79,17 +40,18 @@ Scene::Scene() {
   };
   cameras_.emplace_back(1.0f, 45.0f, 0.1f, 100.0f, glm::vec3(0.0f, 0.5f, 2.0f), false);
   current_camera = &cameras_.front();
-  models_.emplace_back(std::move(vertices), std::move(indices), "wall.jpg");
-  models_.emplace_back(std::move(floorVertives), std::move(floorIndices), "planks.png");
-  models_[1].Scale(glm::vec3(4.0f, 4.0f, 4.0f));
+  //models_.emplace_back("dingus/dingus.obj");
+  //models_[0].Scale(glm::vec3(0.02f, 0.02f, 0.02f));
+  models_.emplace_back("backpack/backpack.obj");
+  models_[0].Scale(glm::vec3(0.2f, 0.2f, 0.2f));
   timer_ = std::make_unique<Timer>(0.01, [&]() { models_.front().Rotate(glm::radians(0.5f), glm::vec3(0.0f, 1.0f, 0.0f)); });
   shaders_.emplace_back("default");
   current_shader = &shaders_.front();
   light_source_shader_ = std::make_unique<Shader>("light");
   point_lights_.emplace_back(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.2f, 1.0f, 2.0f), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f));
-  point_lights_.front().SetModel(std::make_unique<SimpleLightModel>(lightVertices, lightIndices));
+  point_lights_.front().SetModel(std::make_unique<SimpleModel>(lightVertices, lightIndices));
   spot_lights_.emplace_back(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(-2.0f, 1.0f, -2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -0.5f, 1.0f), glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
-  spot_lights_.front().SetModel(std::make_unique<SimpleLightModel>(lightVertices, lightIndices));
+  spot_lights_.front().SetModel(std::make_unique<SimpleModel>(lightVertices, lightIndices));
   glEnable(GL_DEPTH_TEST);
 }
 
@@ -122,7 +84,7 @@ void Scene::Render() {
   current_shader->SetInt("spotLightsCount", spot_lights_.size());
 
   for (auto& model : models_) {
-    model.Render(*current_shader);
+    model.Draw(*current_shader);
   }
 
   light_source_shader_->Activate();

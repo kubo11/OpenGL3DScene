@@ -23,7 +23,7 @@ void LightSource::HideModel() {
   show_model_ = false;
 }
 
-void LightSource::SetModel(std::unique_ptr<SimpleLightModel> model) {
+void LightSource::SetModel(std::unique_ptr<SimpleModel> model) {
   model_ = std::move(model);
   model_->Translate(Position);
   model_->Scale(glm::vec3(0.2f));
@@ -32,7 +32,7 @@ void LightSource::SetModel(std::unique_ptr<SimpleLightModel> model) {
 
 void LightSource::RenderModel(Shader& shader) {
   if (show_model_ && model_ != nullptr) {
-    model_->Render(shader);
+    model_->Draw(shader);
   }
 }
 

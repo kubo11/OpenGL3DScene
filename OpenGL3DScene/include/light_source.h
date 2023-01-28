@@ -22,7 +22,7 @@ class LightSource {
   void SwitchOff();
   void ShowModel();
   void HideModel();
-  void SetModel(std::unique_ptr<SimpleLightModel>);
+  void SetModel(std::unique_ptr<SimpleModel>);
   virtual void Render(Shader&, int) = 0;
   void RenderModel(Shader&);
 
@@ -31,7 +31,7 @@ class LightSource {
 
  protected:
   bool is_on_ = true;
-  std::unique_ptr<SimpleLightModel> model_ = nullptr;
+  std::unique_ptr<SimpleModel> model_ = nullptr;
   bool show_model_ = false;
   glm::vec3 ambient_;
   glm::vec3 diffuse_;

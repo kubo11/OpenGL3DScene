@@ -1,6 +1,10 @@
 #ifndef OPENGL3DSCENE_MODEL_H_
 #define OPENGL3DSCENE_MODEL_H_
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <filesystem>
 #include <glm/glm.hpp>
 #include <memory>
 #include <string>
@@ -8,24 +12,28 @@
 #include <optional>
 
 #include "ebo.h"
+#include "error_log.h"
+#include "mesh.h"
 #include "shader.h"
 #include "texture.h"
 #include "vao.h"
 #include "vbo.h"
 
-class Model {
+namespace fs = std::filesystem;
+
+class SimpleModel {
  public:
-  Model() = default;
-  Model(std::vector<GLfloat>, std::vector<GLuint>, const std::optional<std::string>& = std::nullopt);
-  ~Model() = default;
+  SimpleModel() = default;
+  SimpleModel(std::vector<GLfloat>, std::vector<GLuint>);
+  ~SimpleModel() = default;
 
-  Model(const Model&) = delete;
-  Model& operator = (const Model&) = delete;
+  SimpleModel(const SimpleModel&) = delete;
+  SimpleModel& operator = (const SimpleModel&) = delete;
 
-  Model(Model&&) noexcept = default;
-  Model& operator = (Model&&) noexcept = default;
+  SimpleModel(SimpleModel&&) noexcept = default;
+  SimpleModel& operator = (SimpleModel&&) noexcept = default;
 
-  void Render(Shader&);
+  void Draw(Shader&);
   void Translate(glm::vec3);
   void Scale(glm::vec3);
   void Rotate(GLfloat, glm::vec3);
@@ -36,21 +44,37 @@ class Model {
   std::unique_ptr<VBO> vbo_;
   std::unique_ptr<Texture> texture_ = nullptr;
   glm::mat4 model_matrix_ = glm::mat4(1.0f);
-  int num_of_inidces_;
+  unsigned int num_of_inidces_ = 0;
 };
 
-class SimpleLightModel : public Model {
+class Model {
  public:
-  SimpleLightModel(std::vector<GLfloat>, std::vector<GLuint>);
-  ~SimpleLightModel() = default;
+  Model(const std::string& path, bool gamma = false);
+  ~Model() = default;
 
-  SimpleLightModel(const SimpleLightModel&) = delete;
-  SimpleLightModel& operator = (const SimpleLightModel&) = delete;
+  Model(const Model&) = delete;
+  Model& operator = (const Model&) = delete;
 
-  SimpleLightModel(SimpleLightModel&&) noexcept = default;
-  SimpleLightModel& operator = (SimpleLightModel&&) noexcept = default;
+  Model(Model&&) noexcept = default;
+  Model& operator = (Model&&) noexcept = default;
 
-  void Render(Shader&);
+  void Draw(Shader& shader);
+  void Translate(glm::vec3);
+  void Scale(glm::vec3);
+  void Rotate(GLfloat, glm::vec3);
+
+ private:
+  std::vector<std::shared_ptr<Texture>> loaded_textures_;
+  std::vector<Mesh> meshes_;
+  fs::path directory_;
+  bool gamma_correction_;
+  glm::mat4 model_matrix_ = glm::mat4(1.0f);
+
+  void loadModel(const std::string& path);
+  void processNode(aiNode* node, const aiScene* scene);
+  Mesh processMesh(aiMesh* mesh, const aiScene* scene);
+  void loadMaterialTextures(std::vector<std::shared_ptr<Texture>>&, aiMaterial* mat, aiTextureType type, TextureType texture_type);
+  std::shared_ptr<Texture> isTextureAlreadyLoaded(fs::path);
 };
 
 #endif  // OPENGL3DSCENE_MODEL_H_
