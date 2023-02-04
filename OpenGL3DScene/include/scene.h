@@ -11,6 +11,9 @@
 
 class Scene {
 public:
+  std::shared_ptr<Camera> current_camera;
+  Shader* current_shader;
+
   Scene();
   ~Scene();
 
@@ -21,11 +24,11 @@ public:
   Scene& operator = (Scene&&) noexcept = default;
   
   void Render();
-  Camera* current_camera;
-  Shader* current_shader;
+  void SetCamera(unsigned int);
 
  private:
-  std::vector<Camera> cameras_;
+  glm::mat4 projection_matrix_ = glm::mat4(1.0f);
+  std::vector<std::shared_ptr<Camera>> cameras_;
   std::vector<Shader> shaders_;
   std::unique_ptr<Shader> light_source_shader_;
   std::unique_ptr<Timer> timer_;

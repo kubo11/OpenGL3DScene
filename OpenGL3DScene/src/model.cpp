@@ -158,8 +158,11 @@ void Model::loadMaterialTextures(std::vector<std::shared_ptr<Texture>>& textures
   }
 }
 
-void Model::Translate(glm::vec3 position) {
-  model_matrix_ = glm::translate(model_matrix_, position);
+void Model::Translate(glm::vec3 translation_vec) {
+  model_matrix_ = glm::translate(model_matrix_, translation_vec);
+  for (auto& camera_connector : attached_cameras_) {
+    camera_connector.camera->MoveTo(glm::vec3(model_matrix_ * glm::vec4(camera_connector.position, 1.0f)));
+  }
 }
 
 void Model::Scale(glm::vec3 scale) {
@@ -167,7 +170,10 @@ void Model::Scale(glm::vec3 scale) {
 }
 
 void Model::Rotate(GLfloat angle, glm::vec3 axis) {
-  model_matrix_ = glm::rotate(model_matrix_, angle, axis);
+  model_matrix_ = glm::rotate(model_matrix_, glm::radians(angle), axis);
+  for (auto& camera_connector : attached_cameras_) {
+    camera_connector.camera->Rotate(angle, axis);
+  }
 }
 
 std::shared_ptr<Texture> Model::isTextureAlreadyLoaded(fs::path path) {
@@ -175,4 +181,15 @@ std::shared_ptr<Texture> Model::isTextureAlreadyLoaded(fs::path path) {
     if (texture->GetPath() == path) return texture;
   }
   return nullptr;
+}
+
+void Model::AttachCamera(CameraConnector camera_connector) {
+  attached_cameras_.push_back(camera_connector);
+}
+
+void Model::DettachCamera(std::shared_ptr<Camera> camera) {
+  auto to_remove = std::find_if(attached_cameras_.begin(), attached_cameras_.end(), [&](CameraConnector cam) { return cam.camera == camera; });
+  if (to_remove != attached_cameras_.end()) {
+    attached_cameras_.erase(to_remove);
+  }
 }

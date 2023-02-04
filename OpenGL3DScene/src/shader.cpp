@@ -21,33 +21,33 @@ Shader::Shader(const std::string& shaderName) {
   const GLchar* fragmentShaderSourceC = fragmentShaderSource.c_str();
 
   GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vertexShader, 1, &vertexShaderSourceC, nullptr);
+  GL_CHECK(glShaderSource(vertexShader, 1, &vertexShaderSourceC, nullptr));
   glCompileShader(vertexShader);
   CheckShaderCompileErrors(vertexShader);
 
   GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragmentShader, 1, &fragmentShaderSourceC, nullptr);
+  GL_CHECK(glShaderSource(fragmentShader, 1, &fragmentShaderSourceC, nullptr));
   glCompileShader(fragmentShader);
   CheckShaderCompileErrors(fragmentShader);
 
   ID_ = glCreateProgram();
 
-  glAttachShader(ID_, vertexShader);
-  glAttachShader(ID_, fragmentShader);
+  GL_CHECK(glAttachShader(ID_, vertexShader));
+  GL_CHECK(glAttachShader(ID_, fragmentShader));
 
-  glLinkProgram(ID_);
-  CheckProgramCompileErrors(ID_);
+  GL_CHECK(glLinkProgram(ID_));
+  GL_CHECK(CheckProgramCompileErrors(ID_));
 
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragmentShader);
+  GL_CHECK(glDeleteShader(vertexShader));
+  GL_CHECK(glDeleteShader(fragmentShader));
 }
 
 Shader::~Shader() {
-  glDeleteProgram(ID_);
+  GL_CHECK(glDeleteProgram(ID_));
 }
 
 void Shader::Activate() {
-  glUseProgram(ID_);
+  GL_CHECK(glUseProgram(ID_));
 }
 
 const GLuint& Shader::GetID() const {
@@ -56,22 +56,22 @@ const GLuint& Shader::GetID() const {
 
 void Shader::SetInt(const std::string& name, int value) {
   int id = glGetUniformLocation(ID_, name.c_str());
-  glUniform1i(id, value);
+  GL_CHECK(glUniform1i(id, value));
 }
 
 void Shader::SetFloat(const std::string& name, float value) {
   int id = glGetUniformLocation(ID_, name.c_str());
-  glUniform1f(id, value);
+  GL_CHECK(glUniform1f(id, value));
 }
 
 void Shader::SetVec3(const std::string& name, glm::vec3 value) {
   int id = glGetUniformLocation(ID_, name.c_str());
-  glUniform3f(id, value.x, value.y, value.z);
+  GL_CHECK(glUniform3f(id, value.x, value.y, value.z));
 }
 
 void Shader::SetMat4(const std::string& name, int count, bool transpose, glm::mat4 value) {
   int id = glGetUniformLocation(ID_, name.c_str());
-  glUniformMatrix4fv(id, count, transpose, glm::value_ptr(value));
+  GL_CHECK(glUniformMatrix4fv(id, count, transpose, glm::value_ptr(value)));
 }
 
 // private

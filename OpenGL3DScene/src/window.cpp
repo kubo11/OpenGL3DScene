@@ -14,14 +14,14 @@ Window::Window(const std::string& title, int width, int height)
 }
 
 Window::~Window() {
-  glfwDestroyWindow(window_);
+  // all windows ar edestroyed by call to glfwTerminate
 }
 
 void Window::LoadAsCurrent() {
   glfwMakeContextCurrent(window_);
 
-  gladLoadGL();
-  glViewport(0, 0, width_, height_);
+  GL_CHECK(gladLoadGL());
+  GL_CHECK(glViewport(0, 0, width_, height_));
 }
 
 void Window::SetLoopFunc(std::function<void(void)> loop_func) {
@@ -31,8 +31,8 @@ void Window::SetLoopFunc(std::function<void(void)> loop_func) {
 void Window::RunMainLoop() {
   while (!glfwWindowShouldClose(window_)) {
     loop_func_();
-    glfwSwapBuffers(window_);
-    glfwPollEvents();
+    GL_CHECK(glfwSwapBuffers(window_));
+    GL_CHECK(glfwPollEvents());
   }
 }
 
@@ -49,15 +49,15 @@ const int Window::GetHeight() const {
 }
 
 void Window::SetCursorMode(GLenum mode) {
-  glfwSetInputMode(window_, GLFW_CURSOR, mode);
+  GL_CHECK(glfwSetInputMode(window_, GLFW_CURSOR, mode));
 }
 
 void Window::GetCursorPos(double* posX, double* posY) {
-  glfwGetCursorPos(window_, posX, posY);
+  GL_CHECK(glfwGetCursorPos(window_, posX, posY));
 }
 
 void Window::SetCursorPos(double posX, double posY) {
-  glfwSetCursorPos(window_, posX, posY);
+  GL_CHECK(glfwSetCursorPos(window_, posX, posY));
 }
 
 GLenum Window::GetKey(GLenum key) {

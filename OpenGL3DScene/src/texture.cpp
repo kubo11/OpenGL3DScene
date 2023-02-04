@@ -7,7 +7,7 @@
 Texture::Texture(fs::path path, TextureType texture_type) : type_(texture_type), path_(path) {
   int width, height, colorChannels;
 
-  stbi_set_flip_vertically_on_load(true);
+  //stbi_set_flip_vertically_on_load(true);
 
   unsigned char* bytes = stbi_load(path_.string().c_str(), &width, &height, &colorChannels, 0);
   if (!bytes) {
@@ -39,7 +39,7 @@ Texture::Texture(fs::path path, TextureType texture_type) : type_(texture_type),
   GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
   GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
 
-  GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, bytes));
+  GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, format, GL_UNSIGNED_BYTE, bytes));
   glGenerateMipmap(GL_TEXTURE_2D);
 
   stbi_image_free(bytes);

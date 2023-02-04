@@ -10,12 +10,9 @@
 
 class Camera {
 public:
-  glm::vec3 Position;
-  glm::vec3 Orientation = glm::vec3(0.0f, 0.0f, -1.0f);
-  glm::vec3 Up = glm::vec3(0.0f, 1.0f, 0.0f);
-  float Speed = 0.001f;
+  float Speed = 0.01f;
 
-  Camera(GLfloat, GLfloat, GLfloat, GLfloat, glm::vec3, bool=true);
+  Camera(glm::vec3, glm::vec3, bool=true, bool=true);
   ~Camera() = default;
 
   Camera(const Camera&) = delete;
@@ -24,18 +21,26 @@ public:
   Camera(Camera&&) noexcept = default;
   Camera& operator = (Camera&&) noexcept = default;
 
-  void UpdateMatrices(Shader&);
+  void SetViewMatrix(Shader&);
   void Move(glm::vec3);
+  void MoveTo(glm::vec3);
   void Rotate(float, float);
-  void Lock();
-  void Unlock();
+  void Rotate(GLfloat, glm::vec3);
+  void LockMovement();
+  void UnlockMovement();
+  void LockLook();
+  void UnlockLook();
+  const glm::vec3& GetUp() const;
+  const glm::vec3& GetOrientation() const;
+  const glm::vec3& GetPosition() const;
 
 private:
-  GLfloat aspect_ratio_;
-  GLfloat far_plane_;
-  GLfloat fov_;
-  GLfloat near_plane_;
-  bool is_static_;
+  glm::vec3 position_;
+  glm::vec3 up_ = glm::vec3(0.0f, 1.0f, 0.0f);
+  glm::vec3 orientation_;
+  glm::mat4 view_matrix_ = glm::mat4(1.0f);
+  bool free_movement_;
+  bool free_look_;
 };
 
 #endif  // OPENGL3DSCENE_CAMERA_H_

@@ -12,6 +12,8 @@ App::App() {
 }
 
 App::~App() {
+  scene_.reset();
+  window_.reset();
   glfwTerminate();
 }
 
@@ -33,27 +35,39 @@ void App::SetupInputs() {
   keyboard_input_ = std::make_unique<KeyboardInput>();
   keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_W, GLFW_PRESS, [&]() {
       auto camera = scene_->current_camera;
-      camera->Move(camera->Orientation);
+      camera->Move(camera->GetOrientation());
     });
   keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_S, GLFW_PRESS, [&]() {
     auto camera = scene_->current_camera;
-      camera->Move(-camera->Orientation);
+      camera->Move(-camera->GetOrientation());
     });
   keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_A, GLFW_PRESS, [&]() {
-    auto camera = scene_->current_camera;
-      camera->Move(-glm::normalize(glm::cross(camera->Orientation, camera->Up)));
+      auto camera = scene_->current_camera;
+      camera->Move(-glm::normalize(glm::cross(camera->GetOrientation(), camera->GetUp())));
     });
   keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_D, GLFW_PRESS, [&]() {
-    auto camera = scene_->current_camera;
-      camera->Move(glm::normalize(glm::cross(camera->Orientation, camera->Up)));
+      auto camera = scene_->current_camera;
+      camera->Move(glm::normalize(glm::cross(camera->GetOrientation(), camera->GetUp())));
     });
   keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_SPACE, GLFW_PRESS, [&]() {
-    auto camera = scene_->current_camera;
-      camera->Move(camera->Up);
+      auto camera = scene_->current_camera;
+      camera->Move(camera->GetUp());
     });
   keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_LEFT_CONTROL, GLFW_PRESS, [&]() {
-    auto camera = scene_->current_camera;
-      camera->Move(-camera->Up);
+      auto camera = scene_->current_camera;
+      camera->Move(-camera->GetUp());
+    });
+  keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_0, GLFW_PRESS, [&]() {
+      scene_->SetCamera(0);
+    });
+  keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_1, GLFW_PRESS, [&]() {
+      scene_->SetCamera(1);
+    });
+  keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_2, GLFW_PRESS, [&]() {
+      scene_->SetCamera(2);
+    });
+  keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_ESCAPE, GLFW_PRESS, [&]() {
+      exit(0);
     });
 
   mouse_input_ = std::make_unique<MouseInput>();

@@ -1,0 +1,41 @@
+# Blender 3.4.1 MTL File: 'floor'
+# www.blender.org
+
+newmtl StoneFloor
+Ns 200.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd floor_diffuse.jpg
+map_Bump floor_normal.jpg
+map_Ks floor_specular.jpg
+
+newmtl StoneFloorDetails
+Ns 200.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd details_diffuse.jpg
+map_Bump details_normal.jpg
+map_Ks details_specular.jpg
+
+newmtl StoneFloorGrass
+Ns 200.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd grass_diffuse.png
+map_Bump grass_normal.jpg
+map_Ks grass_specular.jpg

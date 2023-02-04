@@ -3,46 +3,68 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/vector_angle.hpp>
 
-Camera::Camera(GLfloat aspect_ratio, GLfloat fov, GLfloat near_plane, GLfloat far_plane, glm::vec3 position, bool is_static) {
-  aspect_ratio_ = aspect_ratio;
-  fov_ = fov;
-  near_plane_ = near_plane;
-  far_plane_ = far_plane;
-  Position = position;
-  is_static_ = is_static;
+Camera::Camera(glm::vec3 position, glm::vec3 orientation, bool free_movement, bool free_look) {
+  position_ = position;
+  orientation_ = orientation;
+  free_movement_ = free_movement;
+  free_look_ = free_look;
+  view_matrix_ = glm::lookAt(position_, position_ + orientation_, up_);
 }
 
-void Camera::UpdateMatrices(Shader& shader) {
-	glm::mat4 view = glm::mat4(1.0f);
-	glm::mat4 proj = glm::mat4(1.0f);
-
-	view = glm::lookAt(Position, Position + Orientation, Up);
-	proj = glm::perspective(glm::radians(fov_), aspect_ratio_, near_plane_, far_plane_);
-
-  shader.SetMat4("camMatrix", 1, false, proj * view);
+void Camera::SetViewMatrix(Shader& shader) {
+  view_matrix_ = glm::lookAt(position_, position_ + orientation_, up_);
+  shader.SetMat4("view", 1, false, view_matrix_);
 }
 
-void Camera::Move(glm::vec3 moveVec) {
-  if (is_static_) return;
-  Position += Speed * moveVec;
+void Camera::Move(glm::vec3 move_vec) {
+  if (!free_movement_) return;
+  position_ += Speed * move_vec;
+}
+
+void Camera::MoveTo(glm::vec3 new_position) {
+  position_ = new_position;
 }
 
 void Camera::Rotate(float rotX, float rotY) {
-  if (is_static_) return;
-  glm::vec3 newOrientation = glm::rotate(Orientation, glm::radians(-rotX), glm::normalize(glm::cross(Orientation, Up)));
+  if (!free_look_) return;
+  glm::vec3 new_orientation = glm::rotate(orientation_, glm::radians(-rotX), glm::normalize(glm::cross(orientation_, up_)));
 
-  if (abs(glm::angle(newOrientation, Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
+  if (abs(glm::angle(new_orientation, up_) - glm::radians(90.0f)) <= glm::radians(85.0f))
   {
-    Orientation = newOrientation;
+    orientation_ = new_orientation;
   }
 
-  Orientation = glm::rotate(Orientation, glm::radians(-rotY), Up);
+  orientation_ = glm::rotate(orientation_, glm::radians(-rotY), up_);
 }
 
-void Camera::Lock() {
-  is_static_ = true;
+void Camera::Rotate(GLfloat angle, glm::vec3 axis) {
+  orientation_ = glm::rotate(orientation_, glm::radians(angle), axis);
 }
 
-void Camera::Unlock() {
-  is_static_ = false;
+void Camera::LockMovement() {
+  free_movement_ = false;
+}
+
+void Camera::UnlockMovement() {
+  free_movement_ = true;
+}
+
+void Camera::LockLook() {
+  free_look_ = false;
+}
+
+void Camera::UnlockLook() {
+  free_look_ = true;
+}
+
+const glm::vec3& Camera::GetUp() const {
+  return up_;
+}
+
+const glm::vec3& Camera::GetOrientation() const {
+  return orientation_;
+}
+
+const glm::vec3& Camera::GetPosition() const {
+  return position_;
 }

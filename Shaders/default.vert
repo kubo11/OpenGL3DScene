@@ -8,7 +8,8 @@ out vec3 Normal;
 out vec2 TexCoord;
 
 uniform mat4 model;
-uniform mat4 camMatrix;
+uniform mat4 view;
+uniform mat4 projection;
 
 void main()
 {
@@ -16,5 +17,5 @@ void main()
     Normal = mat3(transpose(inverse(model))) * aNormal;  
     TexCoord = aTexCoord;
     
-    gl_Position = camMatrix * vec4(FragPos, 1.0);
+    gl_Position = projection * view * vec4(FragPos, 1.0);
 }

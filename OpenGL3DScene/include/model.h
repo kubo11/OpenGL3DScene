@@ -11,6 +11,7 @@
 #include <vector>
 #include <optional>
 
+#include "camera.h"
 #include "ebo.h"
 #include "error_log.h"
 #include "mesh.h"
@@ -20,6 +21,13 @@
 #include "vbo.h"
 
 namespace fs = std::filesystem;
+
+struct CameraConnector {
+  std::shared_ptr<Camera> camera;
+  glm::vec3 position;
+
+  CameraConnector(std::shared_ptr<Camera> camera, glm::vec3 position, bool free_look) : camera(camera), position(position) {}
+};
 
 class SimpleModel {
  public:
@@ -62,9 +70,12 @@ class Model {
   void Translate(glm::vec3);
   void Scale(glm::vec3);
   void Rotate(GLfloat, glm::vec3);
+  void AttachCamera(CameraConnector);
+  void DettachCamera(std::shared_ptr<Camera>);
 
  private:
   std::vector<std::shared_ptr<Texture>> loaded_textures_;
+  std::vector<CameraConnector> attached_cameras_;
   std::vector<Mesh> meshes_;
   fs::path directory_;
   bool gamma_correction_;
