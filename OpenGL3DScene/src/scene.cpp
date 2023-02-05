@@ -94,6 +94,13 @@ void Scene::Render() {
   }
   current_shader->SetInt("spotLightsCount", spot_lights_.size());
 
+  if (enable_wiggling) {
+    models_.front().Wiggle();
+  }
+  else {
+    models_.front().Unwiggle();
+  }
+
   for (auto& model : models_) {
     model.Draw(*current_shader);
   }

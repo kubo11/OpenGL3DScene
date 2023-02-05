@@ -50,7 +50,13 @@ Model::Model(const std::string& path, bool gamma) : gamma_correction_(gamma) {
 }
 
 void Model::Draw(Shader& shader) {
-  shader.SetMat4("model", 1, false, model_matrix_);
+  if (wiggle_angle_ != 0.0f) {
+    glm::mat4 tmp = glm::rotate(model_matrix_, glm::radians(wiggle_angle_), glm::vec3(0.0f, 1.0f, 0.0f));
+    shader.SetMat4("model", 1, false, tmp);
+  }
+  else {
+    shader.SetMat4("model", 1, false, model_matrix_);
+  }
   for (int i = 0; i < meshes_.size(); ++i)
     meshes_[i].Draw(shader);
 }
@@ -192,4 +198,12 @@ void Model::DettachCamera(std::shared_ptr<Camera> camera) {
   if (to_remove != attached_cameras_.end()) {
     attached_cameras_.erase(to_remove);
   }
+}
+
+void Model::Wiggle() {
+  wiggle_angle_ = (static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 10.0f)) - 5.0f);
+}
+
+void Model::Unwiggle() {
+  wiggle_angle_ = 0.0f;
 }

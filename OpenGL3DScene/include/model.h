@@ -72,6 +72,8 @@ class Model {
   void Rotate(GLfloat, glm::vec3);
   void AttachCamera(CameraConnector);
   void DettachCamera(std::shared_ptr<Camera>);
+  void Wiggle();
+  void Unwiggle();
 
  private:
   std::vector<std::shared_ptr<Texture>> loaded_textures_;
@@ -80,6 +82,7 @@ class Model {
   fs::path directory_;
   bool gamma_correction_;
   glm::mat4 model_matrix_ = glm::mat4(1.0f);
+  float wiggle_angle_ = 0.0f;
 
   void loadModel(const std::string& path);
   void processNode(aiNode* node, const aiScene* scene);

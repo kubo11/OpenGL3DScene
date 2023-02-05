@@ -15,6 +15,7 @@ public:
   Shader* current_shader;
   int fog_level_ = 0;
   static const int max_fog_level = 4;
+  bool enable_wiggling = false;
 
   Scene();
   ~Scene();
@@ -34,6 +35,7 @@ public:
   std::vector<Shader> shaders_;
   std::unique_ptr<Shader> light_source_shader_;
   std::unique_ptr<Timer> timer_;
+  std::unique_ptr<Timer> wiggle_timer_;
   std::vector<Model> models_;
   std::vector<PointLight> point_lights_;
   std::vector<DirectionalLight> directional_lights_;

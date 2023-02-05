@@ -73,6 +73,10 @@ void App::SetupInputs() {
   keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_F, GLFW_PRESS, [&]() {
       fog_timer.Tick();
     });
+  static Timer wiggle_timer = Timer(0.5, [&]() { scene_->enable_wiggling = !scene_->enable_wiggling; });
+  keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_G, GLFW_PRESS, [&]() {
+      wiggle_timer.Tick();
+    });
 
   mouse_input_ = std::make_unique<MouseInput>();
   mouse_input_->AddBinding(UserInput::DefaultScope, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, [&]() {
