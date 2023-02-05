@@ -66,6 +66,9 @@ void App::SetupInputs() {
   keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_2, GLFW_PRESS, [&]() {
       scene_->SetCamera(2);
     });
+  keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_3, GLFW_PRESS, [&]() {
+      scene_->SetCamera(3);
+    });
   keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_ESCAPE, GLFW_PRESS, [&]() {
       exit(0);
     });

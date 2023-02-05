@@ -72,12 +72,15 @@ class Model {
   void Rotate(GLfloat, glm::vec3);
   void AttachCamera(CameraConnector);
   void DettachCamera(std::shared_ptr<Camera>);
+  void AddFollowingCamera(std::shared_ptr<Camera>);
+  void RemoveFollowingCamera(std::shared_ptr<Camera>);
   void Wiggle();
   void Unwiggle();
 
  private:
   std::vector<std::shared_ptr<Texture>> loaded_textures_;
   std::vector<CameraConnector> attached_cameras_;
+  std::vector<std::shared_ptr<Camera>> following_cameras_;
   std::vector<Mesh> meshes_;
   fs::path directory_;
   bool gamma_correction_;

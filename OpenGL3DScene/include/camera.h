@@ -32,6 +32,7 @@ public:
   void UnlockLook();
   const glm::vec3& GetUp() const;
   const glm::vec3& GetOrientation() const;
+  void SetOrientation(glm::vec3);
   const glm::vec3& GetPosition() const;
 
 private:

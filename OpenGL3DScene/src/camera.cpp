@@ -65,6 +65,10 @@ const glm::vec3& Camera::GetOrientation() const {
   return orientation_;
 }
 
+void Camera::SetOrientation(glm::vec3 orientation) {
+  orientation_ = orientation;
+}
+
 const glm::vec3& Camera::GetPosition() const {
   return position_;
 }

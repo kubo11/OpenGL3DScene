@@ -169,6 +169,9 @@ void Model::Translate(glm::vec3 translation_vec) {
   for (auto& camera_connector : attached_cameras_) {
     camera_connector.camera->MoveTo(glm::vec3(model_matrix_ * glm::vec4(camera_connector.position, 1.0f)));
   }
+  for (auto& following_camera : following_cameras_) {
+    following_camera->SetOrientation(glm::vec3(model_matrix_ * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)) - following_camera->GetPosition());
+  }
 }
 
 void Model::Scale(glm::vec3 scale) {
@@ -198,6 +201,13 @@ void Model::DettachCamera(std::shared_ptr<Camera> camera) {
   if (to_remove != attached_cameras_.end()) {
     attached_cameras_.erase(to_remove);
   }
+}
+
+void Model::AddFollowingCamera(std::shared_ptr<Camera> camera) {
+  following_cameras_.push_back(camera);
+}
+void Model::RemoveFollowingCamera(std::shared_ptr<Camera> camera) {
+  std::remove(following_cameras_.begin(), following_cameras_.end(), camera);
 }
 
 void Model::Wiggle() {
