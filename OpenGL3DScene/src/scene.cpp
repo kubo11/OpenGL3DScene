@@ -79,6 +79,8 @@ void Scene::Render() {
   current_camera->SetViewMatrix(*current_shader);
   current_shader->SetVec3("viewPos", current_camera->GetPosition());
 
+  current_shader->SetFloat("fogLevel", fog_level_);
+
   for (int i = 0; i < directional_lights_.size(); ++i) {
     directional_lights_[i].Render(*current_shader, i);
   }

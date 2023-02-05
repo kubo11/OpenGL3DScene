@@ -64,9 +64,13 @@ uniform int spotLightsCount;
 uniform Material material;
 vec3 diffuse3;
 
+// fog
+uniform float fogLevel;
+
 vec3 GetDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir);
 vec3 GetPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 vec3 GetSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
+float CalcFogFactor();
 
 void main() {
   vec3 result = vec3(0.0, 0.0, 0.0);
@@ -86,6 +90,10 @@ void main() {
   for (int i = 0; i < spotLightsCount; ++i) {
 	result += GetSpotLight(spotLights[i], norm, FragPos, viewDir);
   }
+
+  float fogFactor = CalcFogFactor();
+   
+  result = mix(vec3(0.05f), result, fogFactor);
 
   FragColor = vec4(result, vec4(texture(material.diffuse, TexCoord)).w);
 }
@@ -140,4 +148,15 @@ vec3 GetSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
   vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoord));
 
   return (ambient + diffuse + specular) * attenuation * intensity;
+}
+
+float CalcFogFactor() {
+    if (fogLevel == 0) return 1;
+    float gradient = (fogLevel * fogLevel - 7 * fogLevel + 28) / 2;
+    float distance = length(viewPos - FragPos);
+
+    float fogFactor = exp(-pow((distance / gradient), 5)) ;
+
+    fogFactor = clamp(fogFactor, 0.0, 1.0);
+    return fogFactor;
 }

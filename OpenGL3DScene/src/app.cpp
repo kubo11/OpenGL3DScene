@@ -69,6 +69,10 @@ void App::SetupInputs() {
   keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_ESCAPE, GLFW_PRESS, [&]() {
       exit(0);
     });
+  static Timer fog_timer = Timer(0.5, [&]() { scene_->fog_level_ = (scene_->fog_level_ + 1) % Scene::max_fog_level; });
+  keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_F, GLFW_PRESS, [&]() {
+      fog_timer.Tick();
+    });
 
   mouse_input_ = std::make_unique<MouseInput>();
   mouse_input_->AddBinding(UserInput::DefaultScope, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, [&]() {

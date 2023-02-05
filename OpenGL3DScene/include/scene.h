@@ -13,6 +13,8 @@ class Scene {
 public:
   std::shared_ptr<Camera> current_camera;
   Shader* current_shader;
+  int fog_level_ = 0;
+  static const int max_fog_level = 4;
 
   Scene();
   ~Scene();
