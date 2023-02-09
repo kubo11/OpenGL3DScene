@@ -57,6 +57,9 @@ public:
 
 class DirectionalLight : public LightSource {
  public:
+   float Brightness = 1.0f;
+   glm::vec3 Orientation;
+
    DirectionalLight(glm::vec3, glm::vec3, glm::vec3, glm::vec3, glm::vec3, glm::vec3);
   ~DirectionalLight();
 
@@ -66,15 +69,13 @@ class DirectionalLight : public LightSource {
   DirectionalLight(DirectionalLight&&) noexcept = default;
   DirectionalLight& operator = (DirectionalLight&&) noexcept = default;
 
-  glm::vec3 Orientation;
-
   void Render(Shader&, int);
-
- protected:
 };
 
 class SpotLight : public LightSource {
 public:
+  glm::vec3 Orientation;
+
   SpotLight(glm::vec3, glm::vec3, glm::vec3, glm::vec3, glm::vec3, glm::vec3, float, float);
   ~SpotLight();
 
@@ -83,8 +84,6 @@ public:
 
   SpotLight(SpotLight&&) noexcept = default;
   SpotLight& operator = (SpotLight&&) noexcept = default;
-
-  glm::vec3 Orientation;
 
   void Render(Shader&, int);
 

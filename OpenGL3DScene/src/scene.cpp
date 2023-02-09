@@ -49,6 +49,30 @@ Scene::Scene() {
   models_.back().Translate(glm::vec3(0.0f, -0.1f, 0.0f));
 
   timer_ = std::make_unique<Timer>(0.01, [&]() { models_.front().Rotate(0.5f, glm::vec3(0.0f, 1.0f, 0.0f)); models_.front().Translate(glm::vec3(1.0f, 0.0f, 0.0f)); });
+  day_timer_ = std::make_unique<Timer>(interval_, [&]() { 
+    if (!compare(background_color_, night_color, 1e-5f)) { 
+      background_color_ = subtract(background_color_, background_color_interval);
+      directional_lights_.front().Brightness -= 9e-4f;
+      directional_lights_.front().Orientation += glm::vec3(1e-3f, 1e-3f, 0.0f);
+    } 
+    else { 
+      is_day_ = false;
+      directional_lights_.front().Brightness = 0.1f;
+      directional_lights_.front().Orientation = glm::vec3(-1.0f, 0.0f, 0.0f);
+    } 
+  });
+  night_timer_ = std::make_unique<Timer>(interval_, [&]() { 
+    if (!compare(background_color_, day_color, 1e-5f)) { 
+      background_color_ = add(background_color_, background_color_interval);
+      directional_lights_.front().Brightness += 9e-4f;
+      directional_lights_.front().Orientation += glm::vec3(1e-3f, -1e-3f, 0.0f);
+    }
+    else { 
+      is_day_ = true;
+      directional_lights_.front().Brightness = 1.0f;
+      directional_lights_.front().Orientation = glm::vec3(0.0f, -1.0f, 0.0f);
+    } 
+  });
 
   shaders_.emplace_back("default");
   current_shader = &shaders_.front();
@@ -58,6 +82,7 @@ Scene::Scene() {
   point_lights_.front().SetModel(std::make_unique<SimpleModel>(lightVertices, lightIndices));
   spot_lights_.emplace_back(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(-2.0f, 1.0f, -2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -0.5f, 1.0f), glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
   spot_lights_.front().SetModel(std::make_unique<SimpleModel>(lightVertices, lightIndices));
+  directional_lights_.emplace_back(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.2f, 1.0f, 2.0f), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
 
   glEnable(GL_DEPTH_TEST);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -69,10 +94,16 @@ Scene::~Scene() {
 }
 
 void Scene::Render() {
-  glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+  glClearColor(background_color_.x, background_color_.y, background_color_.z, background_color_.w);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   timer_->Tick();
+  if (is_day_) {
+    day_timer_->Tick();
+  }
+  else {
+    night_timer_->Tick();
+  }
 
   current_shader->Activate();
 

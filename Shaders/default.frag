@@ -16,6 +16,8 @@ struct Material {
 
 struct DirectionalLight {
   vec3 orientation;
+
+  float brightness;
 	
   vec3 ambient;
   vec3 diffuse;
@@ -35,9 +37,9 @@ struct PointLight {
 struct SpotLight {
   vec3 position;
   vec3 orientation;
+
   float innerCutOff;
   float outerCutOff;
-  
   vec3 attenuationCoeff;
   
   vec3 ambient;
@@ -106,8 +108,8 @@ vec3 GetDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir) {
   float spec = pow(max(dot(viewDir, reflectDir), 0.0), /*material.shininess*/32.0f);
 
   vec3 ambient = light.ambient * diffuse3;
-  vec3 diffuse = light.diffuse * diff * diffuse3;
-  vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoord));
+  vec3 diffuse = light.brightness * light.diffuse * diff * diffuse3;
+  vec3 specular = light.brightness * light.specular * spec * vec3(texture(material.specular, TexCoord));
 
   return (ambient + diffuse + specular);
 }

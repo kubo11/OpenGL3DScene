@@ -63,6 +63,7 @@ DirectionalLight::~DirectionalLight() {
 void DirectionalLight::Render(Shader& shader, int idx) {
   std::string base_name = "directionalLights[" + std::to_string(idx) + "].";
 
+  shader.SetFloat(base_name + "brightness", Brightness);
   shader.SetVec3(base_name + "orientation", Orientation);
   shader.SetVec3(base_name + "ambient", ambient_);
   shader.SetVec3(base_name + "diffuse", diffuse_);

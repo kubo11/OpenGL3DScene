@@ -180,6 +180,7 @@
     <ClInclude Include="include\texture.h" />
     <ClInclude Include="include\timer.h" />
     <ClInclude Include="include\user_input.h" />
+    <ClInclude Include="include\utils.h" />
     <ClInclude Include="include\vao.h" />
     <ClInclude Include="include\vbo.h" />
     <ClInclude Include="include\window.h" />
