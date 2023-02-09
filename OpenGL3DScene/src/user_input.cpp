@@ -18,8 +18,8 @@ void UserInput::RemoveBinding(const std::string& scope_name, const GLenum key, c
   scopes_.at(scope_name).at(key).erase(action);
 }
 
-void UserInput::ChangeScope(const std::string& scope_name) {
-  current_scope_ = scopes_.at(scope_name);
+void UserInput::ChangeScope(std::string scope_name) {
+  current_scope_ = scope_name;
 }
 
 const ScopeMap& UserInput::GetScopes() {
@@ -27,11 +27,11 @@ const ScopeMap& UserInput::GetScopes() {
 }
 
 const BindingMap& UserInput::GetCurrentScope() {
-  return current_scope_;
+  return scopes_.at(current_scope_);
 }
 
 void KeyboardInput::CaptureUserInput(std::shared_ptr<Window> window) {
-  for (const auto& binding : current_scope_) {
+  for (const auto& binding : scopes_.at(current_scope_)) {
     for (const auto& action : binding.second) {
       if (window->GetKey(binding.first) == action.first) {
         action.second();
@@ -41,7 +41,7 @@ void KeyboardInput::CaptureUserInput(std::shared_ptr<Window> window) {
 }
 
 void MouseInput::CaptureUserInput(std::shared_ptr<Window> window) {
-  for (const auto& binding : current_scope_) {
+  for (const auto& binding : scopes_.at(current_scope_)) {
     for (const auto& action : binding.second) {
       if (window->GetMouseButton(binding.first) == action.first) {
         action.second();

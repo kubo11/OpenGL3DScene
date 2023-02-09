@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-#include "model.h"
+#include "simple_model.h"
 #include "shader.h"
 
 class LightSource {
@@ -86,6 +86,9 @@ public:
   SpotLight& operator = (SpotLight&&) noexcept = default;
 
   void Render(Shader&, int);
+  void MoveTo(glm::vec3);
+  void Rotate(float, float);
+  void Rotate(GLfloat, glm::vec3);
 
  protected:
   float innerCutoff_;

@@ -1,6 +1,8 @@
 #include "app.h"
 #include "error_log.h"
 
+#define FPPCAMERA "fppcamera"
+
 App::App() {
   glfwInit();
 
@@ -32,7 +34,11 @@ void App::Run() {
 }
 
 void App::SetupInputs() {
-  keyboard_input_ = std::make_unique<KeyboardInput>();
+  keyboard_input_ = std::make_shared<KeyboardInput>();
+  keyboard_input_->AddScope(FPPCAMERA);
+  mouse_input_ = std::make_shared<MouseInput>();
+  mouse_input_->AddScope(FPPCAMERA);
+
   keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_W, GLFW_PRESS, [&]() {
       auto camera = scene_->current_camera;
       camera->Move(camera->GetOrientation());
@@ -59,15 +65,43 @@ void App::SetupInputs() {
     });
   keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_0, GLFW_PRESS, [&]() {
       scene_->SetCamera(0);
+      keyboard_input_->ChangeScope(UserInput::DefaultScope);
+      mouse_input_->ChangeScope(UserInput::DefaultScope);
     });
   keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_1, GLFW_PRESS, [&]() {
       scene_->SetCamera(1);
+      keyboard_input_->ChangeScope(FPPCAMERA);
+      mouse_input_->ChangeScope(FPPCAMERA);
     });
   keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_2, GLFW_PRESS, [&]() {
       scene_->SetCamera(2);
+      keyboard_input_->ChangeScope(UserInput::DefaultScope);
+      mouse_input_->ChangeScope(UserInput::DefaultScope);
     });
   keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_3, GLFW_PRESS, [&]() {
       scene_->SetCamera(3);
+      keyboard_input_->ChangeScope(UserInput::DefaultScope);
+      mouse_input_->ChangeScope(UserInput::DefaultScope);
+    });
+  keyboard_input_->AddBinding(FPPCAMERA, GLFW_KEY_0, GLFW_PRESS, [&]() {
+    scene_->SetCamera(0);
+    keyboard_input_->ChangeScope(UserInput::DefaultScope);
+    mouse_input_->ChangeScope(UserInput::DefaultScope);
+    });
+  keyboard_input_->AddBinding(FPPCAMERA, GLFW_KEY_1, GLFW_PRESS, [&]() {
+    scene_->SetCamera(1);
+    keyboard_input_->ChangeScope(FPPCAMERA);
+    mouse_input_->ChangeScope(FPPCAMERA);
+    });
+  keyboard_input_->AddBinding(FPPCAMERA, GLFW_KEY_2, GLFW_PRESS, [&]() {
+    scene_->SetCamera(2);
+    keyboard_input_->ChangeScope(UserInput::DefaultScope);
+    mouse_input_->ChangeScope(UserInput::DefaultScope);
+    });
+  keyboard_input_->AddBinding(FPPCAMERA, GLFW_KEY_3, GLFW_PRESS, [&]() {
+    scene_->SetCamera(3);
+    keyboard_input_->ChangeScope(UserInput::DefaultScope);
+    mouse_input_->ChangeScope(UserInput::DefaultScope);
     });
   keyboard_input_->AddBinding(UserInput::DefaultScope, GLFW_KEY_ESCAPE, GLFW_PRESS, [&]() {
       exit(0);
@@ -89,32 +123,62 @@ void App::SetupInputs() {
       gouraud_timer.Tick();
     });
 
-  mouse_input_ = std::make_unique<MouseInput>();
   mouse_input_->AddBinding(UserInput::DefaultScope, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, [&]() {
     auto camera = scene_->current_camera;
-      float centerX = ((float)window_->GetWidth() / 2), centerY = ((float)window_->GetHeight() / 2);
+    float centerX = ((float)window_->GetWidth() / 2), centerY = ((float)window_->GetHeight() / 2);
 
-      window_->SetCursorMode(GLFW_CURSOR_HIDDEN);
+    window_->SetCursorMode(GLFW_CURSOR_HIDDEN);
 
-      if (mouse_input_->first_click)
-      {
-        window_->SetCursorPos(centerX, centerY);
-        mouse_input_->first_click = false;
-      }
-
-      double mouseX;
-      double mouseY;
-      window_->GetCursorPos(&mouseX, &mouseY);
-
-      float rotX = mouse_input_->sensitivity * (float)(mouseY - centerY) / window_->GetHeight();
-      float rotY = mouse_input_->sensitivity * (float)(mouseX - centerX) / window_->GetWidth();
-
-      camera->Rotate(rotX, rotY);
-
+    if (mouse_input_->first_click)
+    {
       window_->SetCursorPos(centerX, centerY);
-    });
+      mouse_input_->first_click = false;
+    }
+
+    double mouseX;
+    double mouseY;
+    window_->GetCursorPos(&mouseX, &mouseY);
+
+    float rotX = mouse_input_->sensitivity * (float)(mouseY - centerY) / window_->GetHeight();
+    float rotY = mouse_input_->sensitivity * (float)(mouseX - centerX) / window_->GetWidth();
+
+    camera->Rotate(rotX, rotY);
+
+    window_->SetCursorPos(centerX, centerY);
+  });
   mouse_input_->AddBinding(UserInput::DefaultScope, GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, [&]() {
-      window_->SetCursorMode(GLFW_CURSOR_NORMAL);
-      mouse_input_->first_click = true;
-    });
+    window_->SetCursorMode(GLFW_CURSOR_NORMAL);
+    mouse_input_->first_click = true;
+  });
+  mouse_input_->AddBinding(FPPCAMERA, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, [&]() {
+    float centerX = ((float)window_->GetWidth() / 2), centerY = ((float)window_->GetHeight() / 2);
+
+    window_->SetCursorMode(GLFW_CURSOR_HIDDEN);
+
+    if (mouse_input_->first_click)
+    {
+      window_->SetCursorPos(centerX, centerY);
+      mouse_input_->first_click = false;
+    }
+
+    double mouseX;
+    double mouseY;
+    window_->GetCursorPos(&mouseX, &mouseY);
+
+    float rotX = mouse_input_->sensitivity * (float)(mouseY - centerY) / window_->GetHeight();
+    float rotY = mouse_input_->sensitivity * (float)(mouseX - centerX) / window_->GetWidth();
+
+    scene_->RotateModelLights(rotX, rotY);
+
+    window_->SetCursorPos(centerX, centerY);
+  });
+  mouse_input_->AddBinding(FPPCAMERA, GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, [&]() {
+    window_->SetCursorMode(GLFW_CURSOR_NORMAL);
+    mouse_input_->first_click = true;
+  });
+}
+
+void App::SetGlobalScope(const std::string& scope) {
+  keyboard_input_->ChangeScope(scope);
+  mouse_input_->ChangeScope(scope);
 }

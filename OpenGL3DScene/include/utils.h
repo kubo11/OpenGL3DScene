@@ -1,3 +1,6 @@
+#ifndef OPENGL3DSCENE_UTILS_H_
+#define OPENGL3DSCENE_UTILS_H_
+
 #include <glm/glm.hpp>
 
 inline glm::vec4 add(const glm::vec4& a, const glm::vec4& b) {
@@ -15,3 +18,5 @@ inline bool compare(const glm::vec4& a, const glm::vec4& b, float epsilon = 1e-9
 inline glm::vec4 divide(const glm::vec4& a, float b) {
   return glm::vec4(a.x / b, a.y / b, a.z / b, 1.0);
 }
+
+#endif // OPENGL3DSCENE_UTILS_H_

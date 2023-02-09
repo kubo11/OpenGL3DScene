@@ -31,7 +31,7 @@ Scene::Scene() {
   };
 
   cameras_.push_back(std::make_shared<Camera>(glm::vec3(0.0f, 0.5f, 2.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
-  cameras_.push_back(std::make_shared<Camera>(glm::vec3(0.2f, 0.3f, 2.1f), glm::vec3(0.0f, 0.0f, 1.0f), false, false));
+  cameras_.push_back(std::make_shared<Camera>(glm::vec3(0.2f, 0.3f, 2.1f), glm::vec3(0.0f, -0.1f, 1.0f), false, false));
   cameras_.push_back(std::make_shared<Camera>(glm::vec3(), glm::vec3(0.85f, -0.15f, 0.45f), false, true));
   cameras_.push_back(std::make_shared<Camera>(glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(), false, false));
   current_camera = cameras_.front();
@@ -40,8 +40,8 @@ Scene::Scene() {
   models_.back().Scale(glm::vec3(0.02f, 0.02f, 0.02f));
   models_.back().Translate(glm::vec3(0.0f, 0.0f, 100.0f));
   models_.back().Rotate(glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-  models_.back().AttachCamera(CameraConnector(cameras_[1], glm::vec3(15.0f, 15.0f, 10.0f), false));
-  models_.back().AttachCamera(CameraConnector(cameras_[2], glm::vec3(-70.0f, 40.0f, -40.0f), false));
+  models_.back().AttachCamera(CameraConnector(cameras_[1], glm::vec3(15.0f, 15.0f, 10.0f)));
+  models_.back().AttachCamera(CameraConnector(cameras_[2], glm::vec3(-70.0f, 40.0f, -40.0f)));
   models_.back().AddFollowingCamera(cameras_[3]);
 
   models_.emplace_back("floor/floor.obj");
@@ -83,7 +83,12 @@ Scene::Scene() {
   point_lights_.front().SetModel(std::make_unique<SimpleModel>(lightVertices, lightIndices));
   spot_lights_.emplace_back(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(-2.0f, 1.0f, -2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -0.5f, 1.0f), glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
   spot_lights_.front().SetModel(std::make_unique<SimpleModel>(lightVertices, lightIndices));
+  spot_lights_.emplace_back(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.1f, -0.5f, 1.0f), glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
+  spot_lights_.emplace_back(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(-0.1f, -0.5f, 1.0f), glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
   directional_lights_.emplace_back(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.2f, 1.0f, 2.0f), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+
+  models_.front().AttachSpotlight(SpotLightConnector(spot_lights_[1], glm::vec3(16.0f, 15.0f, 10.0f)));
+  models_.front().AttachSpotlight(SpotLightConnector(spot_lights_[2], glm::vec3(14.0f, 15.0f, 10.0f)));
 
   glEnable(GL_DEPTH_TEST);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -162,4 +167,8 @@ void Scene::SetCamera(unsigned int num) {
 void Scene::SetShader(unsigned int num) {
   if (num >= shaders_.size()) return;
   current_shader = shaders_[num];
+}
+
+void Scene::RotateModelLights(float rotX, float rotY) {
+  models_.front().RotateLights(rotX, rotY);
 }

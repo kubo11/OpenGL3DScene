@@ -27,7 +27,7 @@ class UserInput {
   void AddBinding(const std::string&, const GLenum, const GLenum, std::function<void(void)>);
   void RemoveBinding(const std::string&, const GLenum, const GLenum);
   virtual void CaptureUserInput(std::shared_ptr<Window>) = 0;
-  void ChangeScope(const std::string&);
+  void ChangeScope(std::string);
   const ScopeMap& GetScopes();
   const BindingMap& GetCurrentScope();
 
@@ -35,7 +35,7 @@ class UserInput {
 
   protected:
    ScopeMap scopes_ = { {DefaultScope, BindingMap()} };
-   BindingMap& current_scope_ = scopes_[DefaultScope];
+   std::string current_scope_ = DefaultScope;
 };
 
 class KeyboardInput : public UserInput {

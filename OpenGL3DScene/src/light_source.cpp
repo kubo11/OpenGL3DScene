@@ -1,5 +1,8 @@
 #include "light_source.h"
 
+#include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtx/vector_angle.hpp>
+
 LightSource::LightSource(glm::vec3 color, glm::vec3 position, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular)
   : Color(color), Position(position), ambient_(ambient), diffuse_(diffuse), specular_(specular) {}
 
@@ -88,4 +91,23 @@ void SpotLight::Render(Shader& shader, int idx) {
   shader.SetVec3(base_name + "attenuationCoeff", attenuation_coeff_);
   shader.SetFloat(base_name + "innerCutOff", innerCutoff_);
   shader.SetFloat(base_name + "outerCutOff", outerCutoff_);
+}
+
+void SpotLight::MoveTo(glm::vec3 new_position) {
+  Position = new_position;
+}
+
+void SpotLight::Rotate(float rotX, float rotY) {
+  glm::vec3 new_orientation = glm::rotate(Orientation, glm::radians(-rotX), glm::normalize(glm::cross(Orientation, glm::vec3(0.0f, -1.0f, 0.0f))));
+
+  if (abs(glm::angle(new_orientation, glm::vec3(0.0f, -1.0f, 0.0f)) - glm::radians(90.0f)) <= glm::radians(85.0f))
+  {
+    Orientation = new_orientation;
+  }
+
+  Orientation = glm::rotate(Orientation, glm::radians(-rotY), glm::vec3(0.0f, -1.0f, 0.0f));
+}
+
+void SpotLight::Rotate(GLfloat angle, glm::vec3 axis) {
+  Orientation = glm::rotate(Orientation, glm::radians(angle), axis);
 }

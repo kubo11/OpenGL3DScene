@@ -14,6 +14,7 @@
 #include "camera.h"
 #include "ebo.h"
 #include "error_log.h"
+#include "light_source.h"
 #include "mesh.h"
 #include "shader.h"
 #include "texture.h"
@@ -26,33 +27,14 @@ struct CameraConnector {
   std::shared_ptr<Camera> camera;
   glm::vec3 position;
 
-  CameraConnector(std::shared_ptr<Camera> camera, glm::vec3 position, bool free_look) : camera(camera), position(position) {}
+  CameraConnector(std::shared_ptr<Camera> camera, glm::vec3 position) : camera(camera), position(position) {}
 };
 
-class SimpleModel {
- public:
-  SimpleModel() = default;
-  SimpleModel(std::vector<GLfloat>, std::vector<GLuint>);
-  ~SimpleModel() = default;
+struct SpotLightConnector {
+  SpotLight& light;
+  glm::vec3 position;
 
-  SimpleModel(const SimpleModel&) = delete;
-  SimpleModel& operator = (const SimpleModel&) = delete;
-
-  SimpleModel(SimpleModel&&) noexcept = default;
-  SimpleModel& operator = (SimpleModel&&) noexcept = default;
-
-  void Draw(Shader&);
-  void Translate(glm::vec3);
-  void Scale(glm::vec3);
-  void Rotate(GLfloat, glm::vec3);
-
- protected:
-  std::unique_ptr<EBO> ebo_;
-  std::unique_ptr<VAO> vao_;
-  std::unique_ptr<VBO> vbo_;
-  std::unique_ptr<Texture> texture_ = nullptr;
-  glm::mat4 model_matrix_ = glm::mat4(1.0f);
-  unsigned int num_of_inidces_ = 0;
+  SpotLightConnector(SpotLight& light, glm::vec3 position) : light(light), position(position) {}
 };
 
 class Model {
@@ -72,14 +54,17 @@ class Model {
   void Rotate(GLfloat, glm::vec3);
   void AttachCamera(CameraConnector);
   void DettachCamera(std::shared_ptr<Camera>);
+  void AttachSpotlight(SpotLightConnector);
   void AddFollowingCamera(std::shared_ptr<Camera>);
   void RemoveFollowingCamera(std::shared_ptr<Camera>);
   void Wiggle();
   void Unwiggle();
+  void RotateLights(float, float);
 
  private:
   std::vector<std::shared_ptr<Texture>> loaded_textures_;
   std::vector<CameraConnector> attached_cameras_;
+  std::vector<SpotLightConnector> attached_spotlights_;
   std::vector<std::shared_ptr<Camera>> following_cameras_;
   std::vector<Mesh> meshes_;
   fs::path directory_;

@@ -17,10 +17,11 @@ class App {
   App& operator = (App&&) noexcept = default;
 
   void Run();
+  void SetGlobalScope(const std::string&);
 
  private:
-  std::unique_ptr<KeyboardInput> keyboard_input_;
-  std::unique_ptr<MouseInput> mouse_input_;
+  std::shared_ptr<KeyboardInput> keyboard_input_;
+  std::shared_ptr<MouseInput> mouse_input_;
   std::unique_ptr<Scene> scene_;
   std::shared_ptr<Window> window_;
 

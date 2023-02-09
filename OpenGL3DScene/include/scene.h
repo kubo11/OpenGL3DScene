@@ -33,6 +33,7 @@ public:
   void Render();
   void SetCamera(unsigned int);
   void SetShader(unsigned int);
+  void RotateModelLights(float, float);
 
  private:
   glm::mat4 projection_matrix_ = glm::mat4(1.0f);
