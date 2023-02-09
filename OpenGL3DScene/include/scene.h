@@ -13,7 +13,7 @@
 class Scene {
 public:
   std::shared_ptr<Camera> current_camera;
-  Shader* current_shader;
+  std::shared_ptr<Shader> current_shader;
   int fog_level_ = 0;
   static const int max_fog_level = 4;
   bool enable_wiggling = false;
@@ -32,11 +32,12 @@ public:
   
   void Render();
   void SetCamera(unsigned int);
+  void SetShader(unsigned int);
 
  private:
   glm::mat4 projection_matrix_ = glm::mat4(1.0f);
   std::vector<std::shared_ptr<Camera>> cameras_;
-  std::vector<Shader> shaders_;
+  std::vector<std::shared_ptr<Shader>> shaders_;
   std::unique_ptr<Shader> light_source_shader_;
   std::unique_ptr<Timer> timer_;
   std::unique_ptr<Timer> day_timer_;

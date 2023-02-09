@@ -74,8 +74,9 @@ Scene::Scene() {
     } 
   });
 
-  shaders_.emplace_back("default");
-  current_shader = &shaders_.front();
+  shaders_.push_back(std::make_shared<Shader>("phong_light"));
+  shaders_.push_back(std::make_shared<Shader>("gouraud_light"));
+  current_shader = shaders_.front();
   light_source_shader_ = std::make_unique<Shader>("light");
 
   point_lights_.emplace_back(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.2f, 1.0f, 2.0f), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f));
@@ -156,4 +157,9 @@ void Scene::Render() {
 void Scene::SetCamera(unsigned int num) {
   if (num >= cameras_.size()) return;
   current_camera = cameras_[num];
+}
+
+void Scene::SetShader(unsigned int num) {
+  if (num >= shaders_.size()) return;
+  current_shader = shaders_[num];
 }
