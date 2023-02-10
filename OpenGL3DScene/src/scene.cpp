@@ -46,7 +46,12 @@ Scene::Scene() {
 
   models_.emplace_back("floor/floor.obj");
   models_.back().Scale(glm::vec3(2.0f, 2.0f, 2.0f));
-  models_.back().Translate(glm::vec3(0.0f, -0.1f, 0.0f));
+  //models_.back().Translate(glm::vec3(0.0f, -0.1f, 0.0f));
+
+  models_.emplace_back("wall/wall.obj");
+  models_.back().Scale(glm::vec3(0.03f, 0.03f, 0.03f));
+  models_.back().Translate(glm::vec3(-140.0f, 0.0f, 0.0f));
+  models_.back().Rotate(90.f, glm::vec3(0.0f, 1.0f, 0.0f));
 
   timer_ = std::make_unique<Timer>(0.01, [&]() { models_.front().Rotate(0.5f, glm::vec3(0.0f, 1.0f, 0.0f)); models_.front().Translate(glm::vec3(1.0f, 0.0f, 0.0f)); });
   day_timer_ = std::make_unique<Timer>(interval_, [&]() { 
