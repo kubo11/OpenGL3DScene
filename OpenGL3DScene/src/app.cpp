@@ -6,7 +6,7 @@
 App::App() {
   glfwInit();
 
-  window_ = std::make_shared<Window>("DemoWindow", 800, 800);
+  window_ = std::make_shared<Window>("DemoWindow", 1080, 1080);
   window_->LoadAsCurrent();
   scene_ = std::make_unique<Scene>();
 

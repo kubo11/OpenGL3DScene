@@ -36,7 +36,7 @@ Scene::Scene() {
   cameras_.push_back(std::make_shared<Camera>(glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(), false, false));
   current_camera = cameras_.front();
 
-  models_.emplace_back("dingus/dingus.obj");
+  models_.emplace_back("../Models/dingus/dingus.obj");
   models_.back().Scale(glm::vec3(0.02f, 0.02f, 0.02f));
   models_.back().Translate(glm::vec3(0.0f, 0.0f, 100.0f));
   models_.back().Rotate(glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -44,11 +44,10 @@ Scene::Scene() {
   models_.back().AttachCamera(CameraConnector(cameras_[2], glm::vec3(-70.0f, 40.0f, -40.0f)));
   models_.back().AddFollowingCamera(cameras_[3]);
 
-  models_.emplace_back("floor/floor.obj");
+  models_.emplace_back("../Models/floor/floor.obj");
   models_.back().Scale(glm::vec3(2.0f, 2.0f, 2.0f));
-  //models_.back().Translate(glm::vec3(0.0f, -0.1f, 0.0f));
 
-  models_.emplace_back("wall/wall.obj");
+  models_.emplace_back("../Models/wall/wall.obj");
   models_.back().Scale(glm::vec3(0.03f, 0.03f, 0.03f));
   models_.back().Translate(glm::vec3(-140.0f, 0.0f, 0.0f));
   models_.back().Rotate(90.f, glm::vec3(0.0f, 1.0f, 0.0f));
